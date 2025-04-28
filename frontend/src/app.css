@@ -48,7 +48,7 @@ body {
 }
 
 body {
-	@apply bg-base-white text-base-950;
+	@apply bg-base-100 text-base-950;
 }
 
 @layer base {
