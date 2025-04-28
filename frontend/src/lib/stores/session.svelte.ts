@@ -1,12 +1,12 @@
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { auth } from '$lib/firebase-client';
+import { onAuthStateChanged, signOut, type User } from "firebase/auth";
+import { auth } from "$lib/firebase-client";
 
 class AuthSession {
 	user: User | null = $state(null);
 	loading: boolean = $state(true);
 	isLoggedIn: boolean = $state(
 		(() => {
-			const val = localStorage.getItem('authenticated');
+			const val = localStorage.getItem("authenticated");
 			return val !== null && JSON.parse(val) === true;
 		})(),
 	);
@@ -21,7 +21,7 @@ class AuthSession {
 
 	setLoggedIn(val: boolean) {
 		this.isLoggedIn = val;
-		localStorage.setItem('authenticated', JSON.stringify(val));
+		localStorage.setItem("authenticated", JSON.stringify(val));
 	}
 
 	async logout() {

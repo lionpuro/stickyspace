@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { HTMLFormAttributes } from 'svelte/elements';
+	import type { HTMLFormAttributes } from "svelte/elements";
 
 	let { children, onsubmit, ...props }: HTMLFormAttributes = $props();
 </script>

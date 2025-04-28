@@ -1,1 +1,1 @@
-export { default as IconGoogle } from './google.svelte';
+export { default as IconGoogle } from "./google.svelte";

@@ -1,34 +1,34 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { Form, FormButton, FormInput } from '$lib/components';
-	import { auth } from '$lib/firebase-client';
-	import { IconGoogle } from '$lib/icons';
-	import { session } from '$lib/stores/session.svelte';
-	import { FirebaseError } from 'firebase/app';
+	import { goto } from "$app/navigation";
+	import { Form, FormButton, FormInput } from "$lib/components";
+	import { auth } from "$lib/firebase-client";
+	import { IconGoogle } from "$lib/icons";
+	import { session } from "$lib/stores/session.svelte";
+	import { FirebaseError } from "firebase/app";
 	import {
 		GoogleAuthProvider,
 		signInWithEmailAndPassword,
 		signInWithPopup,
-	} from 'firebase/auth';
+	} from "firebase/auth";
 
-	let errorMsg = $state('');
+	let errorMsg = $state("");
 
 	const setError = (e: string) => (errorMsg = e);
 	const resetError = () => {
-		if (errorMsg !== '') {
-			errorMsg = '';
+		if (errorMsg !== "") {
+			errorMsg = "";
 		}
 	};
 
 	function mapError(e: FirebaseError): string {
 		switch (e.code) {
-			case 'auth/invalid-credential':
-			case 'auth/wrong-password':
-				return 'Incorrect email or password';
-			case 'auth/user-not-found':
-				return 'User not found';
-			case 'auth/email-already-in-use':
-				return 'Email already in use';
+			case "auth/invalid-credential":
+			case "auth/wrong-password":
+				return "Incorrect email or password";
+			case "auth/user-not-found":
+				return "User not found";
+			case "auth/email-already-in-use":
+				return "Email already in use";
 			default:
 				return e.code;
 		}
@@ -38,8 +38,8 @@
 		e: SubmitEvent & { currentTarget: HTMLFormElement },
 	) {
 		e.preventDefault();
-		const email = e.currentTarget['email'].value;
-		const password = e.currentTarget['password'].value;
+		const email = e.currentTarget["email"].value;
+		const password = e.currentTarget["password"].value;
 		if (!email || !password) {
 			return;
 		}
@@ -47,7 +47,7 @@
 		try {
 			const creds = await signInWithEmailAndPassword(auth, email, password);
 			session.user = creds.user;
-			goto('/');
+			goto("/");
 		} catch (err) {
 			if (err instanceof FirebaseError) {
 				setError(mapError(err));
@@ -61,7 +61,7 @@
 		try {
 			const creds = await signInWithPopup(auth, provider);
 			session.user = creds.user;
-			goto('/');
+			goto("/");
 		} catch (err) {
 			console.error(err);
 			return err;
@@ -84,7 +84,7 @@
 				type="password"
 				onfocus={resetError}
 			/>
-			{#if errorMsg !== ''}
+			{#if errorMsg !== ""}
 				<span class="mb-2 text-sm text-red-500">{errorMsg}</span>
 			{/if}
 			<FormButton>Sign in</FormButton>

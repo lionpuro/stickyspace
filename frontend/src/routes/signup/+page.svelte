@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { Form, FormButton, FormInput } from '$lib/components';
-	import { auth } from '$lib/firebase-client';
-	import { IconGoogle } from '$lib/icons';
-	import { session } from '$lib/stores/session.svelte';
+	import { goto } from "$app/navigation";
+	import { Form, FormButton, FormInput } from "$lib/components";
+	import { auth } from "$lib/firebase-client";
+	import { IconGoogle } from "$lib/icons";
+	import { session } from "$lib/stores/session.svelte";
 	import {
 		GoogleAuthProvider,
 		createUserWithEmailAndPassword,
 		signInWithPopup,
-	} from 'firebase/auth';
+	} from "firebase/auth";
 
 	async function signupWithEmail(
 		e: SubmitEvent & { currentTarget: HTMLFormElement },
 	) {
 		e.preventDefault();
-		const email = e.currentTarget['email'].value;
-		const password = e.currentTarget['password'].value;
+		const email = e.currentTarget["email"].value;
+		const password = e.currentTarget["password"].value;
 		if (!email || !password) {
 			return;
 		}
@@ -23,7 +23,7 @@
 		try {
 			const creds = await createUserWithEmailAndPassword(auth, email, password);
 			session.user = creds.user;
-			goto('/');
+			goto("/");
 		} catch (err) {
 			console.error(err);
 			return err;
@@ -35,7 +35,7 @@
 		try {
 			const creds = await signInWithPopup(auth, provider);
 			session.user = creds.user;
-			goto('/');
+			goto("/");
 		} catch (err) {
 			console.error(err);
 			return err;

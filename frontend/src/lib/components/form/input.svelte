@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes } from "svelte/elements";
 
 	type Props = {
 		className?: string;
 	} & HTMLInputAttributes;
-	let { className = '', ...props }: Props = $props();
+	let { className = "", ...props }: Props = $props();
 </script>
 
 <input
