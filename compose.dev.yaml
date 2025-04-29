@@ -1,0 +1,12 @@
+services:
+  caddy:
+    network_mode: host
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM caddy:latest
+        COPY caddyfile_dev /etc/caddy/Caddyfile
+      network: host
+    restart: no
+    ports:
+      - "4000:4000"

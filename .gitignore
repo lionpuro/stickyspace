@@ -16,3 +16,5 @@ tmp
 
 **/*_templ.go
 **/*_templ.txt
+
+firebase.json

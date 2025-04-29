@@ -6,28 +6,57 @@
 	import { session } from "$lib/stores/session.svelte";
 	import {
 		GoogleAuthProvider,
-		createUserWithEmailAndPassword,
+		signInWithEmailAndPassword,
 		signInWithPopup,
 	} from "firebase/auth";
+
+	let errorMsg = $state("");
+
+	const setError = (e: string) => (errorMsg = e);
+	const resetError = () => {
+		if (errorMsg !== "") {
+			errorMsg = "";
+		}
+	};
 
 	async function signupWithEmail(
 		e: SubmitEvent & { currentTarget: HTMLFormElement },
 	) {
 		e.preventDefault();
+		const name = e.currentTarget["username"].value;
 		const email = e.currentTarget["email"].value;
 		const password = e.currentTarget["password"].value;
 		if (!email || !password) {
 			return;
 		}
-
 		try {
-			const creds = await createUserWithEmailAndPassword(auth, email, password);
-			session.user = creds.user;
-			goto("/");
-		} catch (err) {
-			console.error(err);
-			return err;
+			const res = await fetch("/api/signup", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					name: name,
+					email: email,
+					password: password,
+				}),
+			});
+			const response = await res.json();
+			if (!res.ok) {
+				setError(response.message);
+				return;
+			}
+			signinWithEmail(email, password);
+		} catch (e) {
+			return e;
 		}
+	}
+
+	async function signinWithEmail(email: string, password: string) {
+		signInWithEmailAndPassword(auth, email, password)
+			.then((creds) => {
+				session.user = creds.user;
+				goto("/");
+			})
+			.catch(() => goto("/signin"));
 	}
 
 	async function signinWithGoogle() {
@@ -49,10 +78,25 @@
 	>
 		<h1 class="mb-6 text-xl font-bold">Sign up</h1>
 		<Form onsubmit={signupWithEmail}>
+			<label for="username" class="mb-2">Username</label>
+			<FormInput
+				id="username"
+				name="username"
+				type="text"
+				onfocus={resetError}
+			/>
 			<label for="email" class="mb-2">Email</label>
-			<FormInput id="email" name="email" type="email" />
+			<FormInput id="email" name="email" type="email" onfocus={resetError} />
 			<label for="password" class="mb-2">Password</label>
-			<FormInput id="password" name="password" type="password" />
+			<FormInput
+				id="password"
+				name="password"
+				type="password"
+				onfocus={resetError}
+			/>
+			{#if errorMsg !== ""}
+				<span class="mb-2 text-sm text-red-500">{errorMsg}</span>
+			{/if}
 			<FormButton type="submit">Sign up</FormButton>
 		</Form>
 		<span
