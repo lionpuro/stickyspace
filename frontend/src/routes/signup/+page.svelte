@@ -53,7 +53,7 @@
 			<FormInput id="email" name="email" type="email" />
 			<label for="password" class="mb-2">Password</label>
 			<FormInput id="password" name="password" type="password" />
-			<FormButton>Sign up</FormButton>
+			<FormButton type="submit">Sign up</FormButton>
 		</Form>
 		<span
 			class="

@@ -87,7 +87,7 @@
 			{#if errorMsg !== ""}
 				<span class="mb-2 text-sm text-red-500">{errorMsg}</span>
 			{/if}
-			<FormButton>Sign in</FormButton>
+			<FormButton type="submit">Sign in</FormButton>
 		</Form>
 		<span
 			class="
