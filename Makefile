@@ -6,7 +6,7 @@ DB_CONN=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_HO
 
 create-migration:
 	@read -p "Enter the sequence name: " SEQ; \
-		docker run --rm -v ./sql/migrations:/migrations migrate/migrate \
+		docker run -u 1000:1000 --rm -v ./sql/migrations:/migrations migrate/migrate \
 			create -ext sql -dir /migrations -seq $${SEQ}
 
 migrate-up:
