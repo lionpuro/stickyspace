@@ -3,15 +3,17 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/lionpuro/stickyspace/auth"
+	"log"
 	"net/http"
 	"net/mail"
 	"unicode"
 
+	"github.com/lionpuro/stickyspace/auth"
+
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func handleSignUp(as *auth.Service) http.HandlerFunc {
+func handleSignUp(as *auth.Service, us *UserService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -31,11 +33,22 @@ func handleSignUp(as *auth.Service) http.HandlerFunc {
 			return
 		}
 
-		if _, err := as.CreateUser(r.Context(), u.Email, u.Password, u.Name); err != nil {
+		user, err := as.CreateUser(r.Context(), u.Email, u.Password, u.Name)
+		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(errorResponse{
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
+			})
+			return
+		}
+
+		if err := us.CreateUser(r.Context(), user.UID, user.Email, user.DisplayName); err != nil {
+			log.Printf("create user: %v", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(errorResponse{
+				Code:    http.StatusInternalServerError,
+				Message: "Internal server error",
 			})
 			return
 		}
